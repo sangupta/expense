@@ -1,5 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.sangupta</groupId>
@@ -8,11 +9,43 @@
 	<packaging>jar</packaging>
 
 	<name>expense</name>
-	<url>http://maven.apache.org</url>
+	<description>Command line tool to manage daily expenses</description>
+	<inceptionYear>2015</inceptionYear>
+	<url>http://sangupta.com/projects/expense</url>
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+
+	<scm>
+		<connection>scm:git:git://github.com/sangupta/expense.git</connection>
+		<developerConnection>scm:git:http://git@github.com/sangupta/expense.git</developerConnection>
+		<url>https://github.com/sangupta/expense</url>
+	</scm>
+
+	<developers>
+		<developer>
+			<id>sangupta</id>
+			<name>Sandeep Gupta</name>
+			<email>sandy.pec@gmail.com</email>
+			<url>http://www.sangupta.com</url>
+		</developer>
+	</developers>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
+		<build.timestamp>${maven.build.timestamp}</build.timestamp>
+		<build.number />
 	</properties>
+
+	<prerequisites>
+		<maven>3.0.0</maven>
+	</prerequisites>
 
 	<dependencies>
 		<dependency>
@@ -28,16 +61,16 @@
 			<version>1.4.0</version>
 		</dependency>
 		<dependency>
-		    <groupId>io.airlift</groupId>
-		    <artifactId>airline</artifactId>
-		    <version>0.7</version>
+			<groupId>io.airlift</groupId>
+			<artifactId>airline</artifactId>
+			<version>0.7</version>
 		</dependency>
 
 		<!-- Prevent logging -->
 		<dependency>
-		    <groupId>org.slf4j</groupId>
-		    <artifactId>slf4j-nop</artifactId>
-		    <version>1.7.7</version>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-nop</artifactId>
+			<version>1.7.7</version>
 		</dependency>
 	</dependencies>
 
@@ -69,7 +102,8 @@
 						</goals>
 						<configuration>
 							<transformers>
-								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<mainClass>com.sangupta.expense.ExpenseMain</mainClass>
 								</transformer>
 							</transformers>
@@ -79,5 +113,5 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 </project>

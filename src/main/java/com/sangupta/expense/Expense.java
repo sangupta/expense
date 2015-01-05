@@ -21,8 +21,6 @@
 
 package com.sangupta.expense;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class Expense implements Comparable<Expense> {
 	
@@ -70,12 +68,7 @@ public class Expense implements Comparable<Expense> {
 	
 	@Override
 	public String toString() {
-		Date d = new Date(this.getDate());
-		SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy");
-		String date = "[" + format.format(d) + "] ";
-		String line = this.expenseID + "," + this.date + "," + this.expense + "," + date + this.description;
-
-		return line;
+		return this.expenseID + "," + this.date + "," + this.expense + ","  + this.description;
 	}
 	
 	public int compareTo(Expense o) {

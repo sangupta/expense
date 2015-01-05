@@ -1,6 +1,9 @@
 package com.sangupta.expense;
 
-public class Expense {
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class Expense implements Comparable<Expense> {
 	
 	// expense id
 	private String expenseID;
@@ -42,6 +45,37 @@ public class Expense {
 		this.date = time;
 		this.expense = expense;
 		this.description = description;
+	}
+	
+	@Override
+	public String toString() {
+		Date d = new Date(this.getDate());
+		SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy");
+		String date = "[" + format.format(d) + "] ";
+		String line = this.expenseID + "," + this.date + "," + this.expense + "," + date + this.description;
+
+		return line;
+	}
+	
+	public int compareTo(Expense o) {
+		if(o == null) {
+			return -1;
+		}
+		
+		if(this == o) {
+			return 0;
+		}
+		
+		if(this.date < o.date) {
+			return -1;
+		}
+		
+		if(this.date > o.date) {
+			return 1;
+		}
+		
+		// same date
+		return this.expense - o.expense;
 	}
 	
 	// Usual accessors follow
@@ -101,5 +135,5 @@ public class Expense {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 }

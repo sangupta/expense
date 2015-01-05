@@ -2,10 +2,9 @@ package com.sangupta.expense.impl;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -34,13 +33,8 @@ public class SingleFileExpenseServiceImpl implements ExpenseService {
 			expense.setExpenseID(UUID.randomUUID().toString());
 		}
 		
-		Date d = new Date(expense.getDate());
-		SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy");
-		String date = "[" + format.format(d) + "] ";
-		String line = expense.getExpenseID() + "," + expense.getDate() + "," + expense.getExpense() + "," + date + expense.getDescription() + StringUtils.SYSTEM_NEW_LINE;
-		
 		try {
-			FileUtils.writeStringToFile(this.expenseFile, line, true);
+			FileUtils.writeStringToFile(this.expenseFile, expense.toString() + StringUtils.SYSTEM_NEW_LINE, true);
 			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -159,6 +153,35 @@ public class SingleFileExpenseServiceImpl implements ExpenseService {
 		}		
 		
 		return null;
+	}
+	
+	public void sort() {
+		final List<Expense> expenses = new ArrayList<Expense>();
+		try {
+			List<String> lines = FileUtils.readLines(this.expenseFile);
+			for (Iterator<String> iterator = lines.iterator(); iterator.hasNext();) {
+				String line = iterator.next();
+				Expense expense = parseExpense(line);
+				if(expense == null) {
+					continue;
+				}
+
+				expenses.add(expense);
+			}
+			
+			// sort expenses
+			Collections.sort(expenses);
+
+			// rebuild text file
+			lines.clear();
+			for(Expense expense : expenses) {
+				lines.add(expense.toString());
+			}
+			
+			FileUtils.writeLines(this.expenseFile, lines);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
 	}
 
 	private Expense parseExpense(String line) {

@@ -75,5 +75,11 @@ public interface ExpenseService {
 	 * @return
 	 */
 	public List<Expense> list(int month, int year);
+
+	/**
+	 * Sort data in data store chronologically
+	 * 
+	 */
+	public void sort();
 	
 }

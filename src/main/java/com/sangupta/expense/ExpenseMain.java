@@ -38,6 +38,9 @@ public class ExpenseMain {
 	@Option(name = { "--total", "-t" }, description = "The total amount of expenses incurred in the month")
 	private boolean showTotal;
 	
+	@Option(name = { "--sort", "-s" }, description = "Sort line chronologically")
+	private boolean sortLines;
+	
 	@Arguments(description = "The description for the expense")
 	private String description;
 	
@@ -61,6 +64,11 @@ public class ExpenseMain {
 		if(this.showTotal) {
 			long total = service.total(this.month, this.year);
 			System.out.println("Total expenses incurred for month: " + total);
+			return true;
+		}
+		
+		if(this.sortLines) {
+			service.sort();
 			return true;
 		}
 		

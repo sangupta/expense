@@ -37,6 +37,12 @@ import com.sangupta.expense.ExpenseService;
 import com.sangupta.jerry.util.AssertUtils;
 import com.sangupta.jerry.util.StringUtils;
 
+/**
+ * A single CSV file based implementation of the {@link ExpenseService}.
+ * 
+ * @author sangupta
+ *
+ */
 public class SingleFileExpenseServiceImpl implements ExpenseService {
 	
 	private final File expenseFile;

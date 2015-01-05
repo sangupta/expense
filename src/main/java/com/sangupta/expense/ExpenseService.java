@@ -23,6 +23,13 @@ package com.sangupta.expense;
 
 import java.util.List;
 
+/**
+ * Contract for services that provide expense storage and basic
+ * processing.
+ * 
+ * @author sangupta
+ *
+ */
 public interface ExpenseService {
 
 	/**

@@ -21,19 +21,32 @@
 
 package com.sangupta.expense;
 
-
+/**
+ * Value object that holds one expense
+ * 
+ * @author sangupta
+ *
+ */
 public class Expense implements Comparable<Expense> {
 	
-	// expense id
+	/**
+	 * The unique ID
+	 */
 	private String expenseID;
 	
-	// date of expense
+	/**
+	 * Date of expense
+	 */
 	private long date;
 	
-	// amount for expense
+	/**
+	 * Amount for expense
+	 */
 	private int expense;
 	
-	// description of the expense
+	/**
+	 * Description of the expense
+	 */
 	private String description;
 	
 	/**
@@ -64,6 +77,33 @@ public class Expense implements Comparable<Expense> {
 		this.date = time;
 		this.expense = expense;
 		this.description = description;
+	}
+	
+	@Override
+	public int hashCode() {
+		if(this.expenseID == null) {
+			return -1;
+		}
+		
+		return this.expenseID.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(this.expenseID == null) {
+			return false;
+		}
+		
+		if(this == obj) {
+			return true;
+		}
+		
+		if(!(obj instanceof Expense)) {
+			return false;
+		}
+		
+		Expense other = (Expense) obj;
+		return this.expenseID.equals(other.expenseID);
 	}
 	
 	@Override

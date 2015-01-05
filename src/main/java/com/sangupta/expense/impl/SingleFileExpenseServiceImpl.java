@@ -92,17 +92,19 @@ public class SingleFileExpenseServiceImpl implements ExpenseService {
 			throw new IllegalArgumentException("Expense ID cannot be null/empty");
 		}
 		
-		expenseID = expenseID + ",";
+		boolean success = false;
 		try {
 			List<String> lines= FileUtils.readLines(this.expenseFile);
 			for (Iterator<String> iterator = lines.iterator(); iterator.hasNext();) {
-				String line = iterator.next();
-				if(line.startsWith(expenseID)) {
+				Expense expense = parseExpense(iterator.next());
+				if(expenseID.equals(expense.getExpenseID())) {
 					iterator.remove();
+					success = true;
 				}
 			}
 			
 			FileUtils.writeLines(this.expenseFile, lines);
+			return success;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

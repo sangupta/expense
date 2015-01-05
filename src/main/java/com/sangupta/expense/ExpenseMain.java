@@ -21,6 +21,10 @@
 
 package com.sangupta.expense;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
 import io.airlift.airline.Arguments;
 import io.airlift.airline.Command;
 import io.airlift.airline.HelpOption;
@@ -30,6 +34,8 @@ import io.airlift.airline.SingleCommand;
 import javax.inject.Inject;
 
 import com.sangupta.expense.impl.SingleFileExpenseServiceImpl;
+import com.sangupta.jerry.print.ConsoleTable;
+import com.sangupta.jerry.print.ConsoleTable.ConsoleTableLayout;
 import com.sangupta.jerry.util.AssertUtils;
 
 /**
@@ -62,6 +68,12 @@ public class ExpenseMain {
 	@Option(name = { "--sort", "-s" }, description = "Sort line chronologically")
 	private boolean sortLines;
 	
+	@Option(name = { "--remove", "-r" }, description = "Remove the given expense")
+	private String removeID;
+	
+	@Option(name = { "--list", "-l" }, description = "Show list of expenses")
+	private boolean showList;
+	
 	@Arguments(description = "The description for the expense")
 	private String description;
 	
@@ -90,6 +102,37 @@ public class ExpenseMain {
 		
 		if(this.sortLines) {
 			service.sort();
+			return true;
+		}
+		
+		if(this.showList) {
+			List<Expense> list = service.list(this.month, this.year);
+			if(AssertUtils.isEmpty(list)) {
+				System.out.println("No expenses for the given/current month");
+				return true;
+			}
+			
+			ConsoleTable table = new ConsoleTable(ConsoleTableLayout.MULTI_LINE);
+			table.addHeaderRow("ID", "Date", "Expense", "Total", "Description");
+			long total = 0;
+			SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy");
+			for(Expense expense : list) {
+				total += expense.getExpense();
+				table.addRow(expense.getExpenseID(), format.format(new Date(expense.getDate())), expense.getExpense(), total, expense.getDescription());
+			}
+			
+			table.write(System.out);
+			return true;
+		}
+		
+		if(AssertUtils.isNotEmpty(this.removeID)) {
+			boolean removed = service.remove(removeID);
+			if(removed) {
+				System.out.println("Expense removed.");
+				return true;
+			}
+			
+			System.out.println("No such expense found!");
 			return true;
 		}
 		

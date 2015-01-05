@@ -50,6 +50,9 @@ public class ExpenseMain {
 		boolean handled = main.run();
 		if(!handled) {
 			// display help
+			main.helpOption.help = true;
+			main.helpOption.showHelpIfRequested();
+			return;
 		}
 	}
 

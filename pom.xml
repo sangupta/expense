@@ -32,6 +32,13 @@
 		    <artifactId>airline</artifactId>
 		    <version>0.7</version>
 		</dependency>
+
+		<!-- Prevent logging -->
+		<dependency>
+		    <groupId>org.slf4j</groupId>
+		    <artifactId>slf4j-nop</artifactId>
+		    <version>1.7.7</version>
+		</dependency>
 	</dependencies>
 
 	<build>

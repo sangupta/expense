@@ -2,8 +2,10 @@ package com.sangupta.expense.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -32,11 +34,16 @@ public class SingleFileExpenseServiceImpl implements ExpenseService {
 			expense.setExpenseID(UUID.randomUUID().toString());
 		}
 		
-		String line = expense.getExpenseID() + "," + expense.getDate() + "," + expense.getExpense() + "," + expense.getDescription() + StringUtils.SYSTEM_NEW_LINE;
+		Date d = new Date(expense.getDate());
+		SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy");
+		String date = "[" + format.format(d) + "] ";
+		String line = expense.getExpenseID() + "," + expense.getDate() + "," + expense.getExpense() + "," + date + expense.getDescription() + StringUtils.SYSTEM_NEW_LINE;
+		
 		try {
 			FileUtils.writeStringToFile(this.expenseFile, line, true);
 			return true;
 		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		
 		return false;
@@ -49,9 +56,17 @@ public class SingleFileExpenseServiceImpl implements ExpenseService {
 
 	public boolean add(int value, String description, int date, int month, int year) {
 		Calendar calendar = Calendar.getInstance();
-		calendar.set(Calendar.DATE, date);
-		calendar.set(Calendar.MONTH, month);
-		calendar.set(Calendar.YEAR, year);
+		if(date > 0) {
+			calendar.set(Calendar.DATE, date);
+		}
+		
+		if(month > 0) {
+			calendar.set(Calendar.MONTH, month);
+		}
+		
+		if(year > 0) {
+			calendar.set(Calendar.YEAR, year);
+		}
 		
 		Expense expense = new Expense(calendar.getTimeInMillis(), value, description);
 		return this.add(expense);

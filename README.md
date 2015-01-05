@@ -67,7 +67,7 @@ License
 expense - CLI for managing daily expenses
 Copyright (c) 2015, Sandeep Gupta
 
-	http://sangupta.com/projects/expenses
+	http://sangupta.com/projects/expense
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

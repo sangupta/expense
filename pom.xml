@@ -4,7 +4,7 @@
 
 	<groupId>com.sangupta</groupId>
 	<artifactId>expense</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.1</version>
 	<packaging>jar</packaging>
 
 	<name>expense</name>
@@ -23,7 +23,7 @@
 		<connection>scm:git:git://github.com/sangupta/expense.git</connection>
 		<developerConnection>scm:git:http://git@github.com/sangupta/expense.git</developerConnection>
 		<url>https://github.com/sangupta/expense</url>
-	  <tag>HEAD</tag>
+	  <tag>expense-1.0.1</tag>
   </scm>
 
 	<developers>

@@ -151,7 +151,11 @@ public class ExpenseMain {
 			return true;
 		}
 		
-		System.out.println("Expense added.");
+		// as the expense was added - show the total amount
+		long total = service.total(this.month, this.year);
+		System.out.println("Total expenses incurred for month: " + total);
+		
+		// we could process fine
 		return true;
 	}
 }

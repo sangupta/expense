@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -81,7 +82,7 @@ public class SingleFileExpenseServiceImpl implements ExpenseService {
 			calendar.set(Calendar.DATE, date);
 		}
 		
-		if(month > 0) {
+		if(month >= 0) {
 			calendar.set(Calendar.MONTH, month);
 		}
 		
@@ -151,15 +152,6 @@ public class SingleFileExpenseServiceImpl implements ExpenseService {
 	}
 
 	public List<Expense> list(int month, int year) {
-		Calendar calendar = Calendar.getInstance();
-		calendar.set(Calendar.DATE, 1);
-		calendar.set(Calendar.MONTH, month);
-		calendar.set(Calendar.YEAR, year);
-		
-		final long start = calendar.getTimeInMillis();
-		calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) + 1);
-		
-		final long end = calendar.getTimeInMillis();
 		final List<Expense> expenses = new ArrayList<Expense>();
 		try {
 			List<String> lines = FileUtils.readLines(this.expenseFile);
@@ -171,7 +163,8 @@ public class SingleFileExpenseServiceImpl implements ExpenseService {
 				}
 				
 				final long time = expense.getDate();
-				if(!(start <= time && time <= end)) {
+				Date date = new Date(time);
+				if(dateInMonth(date, month, year)) {
 					expenses.add(expense);
 				}
 			}
@@ -247,6 +240,14 @@ public class SingleFileExpenseServiceImpl implements ExpenseService {
 		
 		expense.setDescription(line.substring(index + 1));
 		return expense;
+	}
+
+	private static boolean dateInMonth(Date date, int month, int year) {
+		if(date.getMonth() == month && (date.getYear() + 1900) == year) {
+			return true;
+		}
+		
+		return false;
 	}
 
 }

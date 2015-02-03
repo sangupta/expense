@@ -51,13 +51,13 @@ public class ExpenseMain {
     public HelpOption helpOption;
 	
 	@Option(name = { "--date", "-d" }, description = "The date on which expense was incurred")
-	private int date;
+	private int date = -1;
 	
 	@Option(name = { "--month", "-m" }, description = "The month in which expense was incurred")
-	private int month;
+	private int month = -1;
 	
 	@Option(name = { "--year", "-y" }, description = "The year in which expense was incurred")
-	private int year;
+	private int year = -1;
 	
 	@Option(name = { "--amount", "-a" }, description = "The round-off integer expense that was incurred")
 	private int amount;
@@ -78,6 +78,8 @@ public class ExpenseMain {
 	private String description;
 	
 	public static void main(String[] args) {
+		args = new String[] { "-l" };
+		
 		ExpenseMain main = SingleCommand.singleCommand(ExpenseMain.class).parse(args);
 		if(main.helpOption.showHelpIfRequested()) {
 			return;
@@ -93,9 +95,20 @@ public class ExpenseMain {
 	}
 
 	private boolean run() {
+		// check and fix month
+		if(this.month > 0) {
+			this.month = this.month - 1; // in java jan is 0, whereas for humans it is 1
+		}
+		
 		ExpenseService service = new SingleFileExpenseServiceImpl();
 		if(this.showTotal) {
-			long total = service.total(this.month, this.year);
+			long total;
+			if(this.month == -1 && this.year == -1) {
+				total = service.total();
+			} else {
+				total = service.total(this.month, this.year);
+			}
+			
 			System.out.println("Total expenses incurred for month: " + total);
 			return true;
 		}
@@ -106,7 +119,13 @@ public class ExpenseMain {
 		}
 		
 		if(this.showList) {
-			List<Expense> list = service.list(this.month, this.year);
+			List<Expense> list;
+			if(this.month == -1 && this.year == -1) {
+				list = service.list();
+			} else {
+				list = service.list(this.month, this.year);
+			}
+			
 			if(AssertUtils.isEmpty(list)) {
 				System.out.println("No expenses for the given/current month");
 				return true;

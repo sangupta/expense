@@ -78,17 +78,9 @@ public class SingleFileExpenseServiceImpl implements ExpenseService {
 
 	public boolean add(int value, String description, int date, int month, int year) {
 		Calendar calendar = Calendar.getInstance();
-		if(date > 0) {
-			calendar.set(Calendar.DATE, date);
-		}
-		
-		if(month >= 0) {
-			calendar.set(Calendar.MONTH, month);
-		}
-		
-		if(year > 0) {
-			calendar.set(Calendar.YEAR, year);
-		}
+		calendar.set(Calendar.DATE, date);
+		calendar.set(Calendar.MONTH, month);
+		calendar.set(Calendar.YEAR, year);
 		
 		Expense expense = new Expense(calendar.getTimeInMillis(), value, description);
 		return this.add(expense);

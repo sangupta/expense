@@ -21,15 +21,15 @@
 
 package com.sangupta.expense;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
 import io.airlift.airline.Arguments;
 import io.airlift.airline.Command;
 import io.airlift.airline.HelpOption;
 import io.airlift.airline.Option;
 import io.airlift.airline.SingleCommand;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -46,6 +46,8 @@ import com.sangupta.jerry.util.AssertUtils;
  */
 @Command(name = "expense", description = "Simple CLI tool to manage daily expenses")
 public class ExpenseMain {
+	
+	private static final String[] MONTHS = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 	
 	@Inject
     public HelpOption helpOption;
@@ -78,8 +80,6 @@ public class ExpenseMain {
 	private String description;
 	
 	public static void main(String[] args) {
-		args = new String[] { "-l" };
-		
 		ExpenseMain main = SingleCommand.singleCommand(ExpenseMain.class).parse(args);
 		if(main.helpOption.showHelpIfRequested()) {
 			return;
@@ -96,20 +96,26 @@ public class ExpenseMain {
 
 	private boolean run() {
 		// check and fix month
+		final Date now = new Date();
 		if(this.month > 0) {
 			this.month = this.month - 1; // in java jan is 0, whereas for humans it is 1
 		}
+		if(this.year == -1) {
+			this.year = now.getYear() + 1900;
+		}
+		if(this.month == -1) {
+			this.month = now.getMonth();
+		}
+		if(this.date == -1) {
+			this.date = now.getDate();
+		}
 		
+		// start running
 		ExpenseService service = new SingleFileExpenseServiceImpl();
 		if(this.showTotal) {
-			long total;
-			if(this.month == -1 && this.year == -1) {
-				total = service.total();
-			} else {
-				total = service.total(this.month, this.year);
-			}
+			long total = service.total(this.month, this.year);
 			
-			System.out.println("Total expenses incurred for month: " + total);
+			System.out.println("Total expenses incurred for " + thisMonth() + ": " + total);
 			return true;
 		}
 		
@@ -119,15 +125,10 @@ public class ExpenseMain {
 		}
 		
 		if(this.showList) {
-			List<Expense> list;
-			if(this.month == -1 && this.year == -1) {
-				list = service.list();
-			} else {
-				list = service.list(this.month, this.year);
-			}
+			List<Expense> list = service.list(this.month, this.year);
 			
 			if(AssertUtils.isEmpty(list)) {
-				System.out.println("No expenses for the given/current month");
+				System.out.println("No expenses for the " + thisMonth());
 				return true;
 			}
 			
@@ -172,9 +173,13 @@ public class ExpenseMain {
 		
 		// as the expense was added - show the total amount
 		long total = service.total(this.month, this.year);
-		System.out.println("Total expenses incurred for month: " + total);
+		System.out.println("Total expenses incurred for " +  thisMonth() + ": " + total);
 		
 		// we could process fine
 		return true;
+	}
+	
+	private String thisMonth() {
+		return MONTHS[this.month] + " " + this.year;
 	}
 }
